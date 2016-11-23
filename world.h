@@ -9,6 +9,7 @@ public:
   // ~World() { ; } // The frame will be deleted by the FrameFactory
   void update();
   void draw() const;
+  void drawFloat(Sint16 yyy, Sint16 yy) const;
 private:
   const IOManager& io;
   Frame* const frame;

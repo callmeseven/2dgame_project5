@@ -15,12 +15,20 @@
 }*/
 
 Clock& Clock::getInstance(){
+    if( SDL_WasInit(SDL_INIT_VIDEO) == 0){
+        throw std::string("Must initialize SDL before the Clock runs.");
+    }
     static Clock instance;
     return instance;
 }
 
 
 Clock::Clock() :
+  fps_frame(Gamedata::getInstance().getXmlInt("FPS_MAX")), 
+
+  frameTick(), frameCount(0), fps(0), one_frame_tick(0), old_frame_tick(0),
+  tick_Diff(0), tick_Sum(0), 
+
   started(false), 
   paused(false), 
   sloMo(false), 
@@ -36,6 +44,11 @@ Clock::Clock() :
 }
 
 Clock::Clock(const Clock& c) :
+  fps_frame(Gamedata::getInstance().getXmlInt("FPS_MAX")),
+
+  frameTick(), frameCount(0), fps(0), one_frame_tick(0), old_frame_tick(0),
+  tick_Diff(0), tick_Sum(0), 
+
   started(c.started), 
   paused(c.paused), 
   sloMo(c.sloMo), 
@@ -130,3 +143,24 @@ void Clock::unpause() {
   }
 }
 
+int Clock::getFps(){
+    if( frameCount <= fps_frame+5 ) {
+        one_frame_tick = SDL_GetTicks() - old_frame_tick;
+        old_frame_tick = SDL_GetTicks();
+        frameTick.push_back(one_frame_tick);
+        tick_Sum = tick_Sum + one_frame_tick;
+        fps = 1000 * frameCount / tick_Sum;
+        frameCount++;
+        return fps;
+    }
+    else {
+        one_frame_tick = SDL_GetTicks() - old_frame_tick;
+        old_frame_tick = SDL_GetTicks();
+        tick_Diff = one_frame_tick - frameTick[frameCount%fps_frame];
+        tick_Sum = tick_Sum + one_frame_tick - frameTick[frameCount%fps_frame];
+        frameTick[frameCount%fps_frame] = one_frame_tick;
+        fps = 1000 * fps_frame / tick_Sum;
+        frameCount++;
+        return fps;
+    }
+}

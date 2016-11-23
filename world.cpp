@@ -22,3 +22,8 @@ void World::draw() const {
   frame->draw(0, viewY, frameWidth-viewX, 0); 
 }
 
+void World::drawFloat(Sint16 yyy, Sint16 yy) const {
+    frame->draw(viewX, yyy, 0, yy);
+    frame->draw(0, yyy, frameWidth-viewX, yy);
+}
+

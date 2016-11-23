@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <string>
+#include <vector>
 
 class Manager;
 
@@ -8,10 +9,21 @@ public:
   static Clock& getInstance();
   unsigned int getTicks() const;
   unsigned int getTotalTicks() const { return sumOfAllTicks; }
+  int getFps();
 
 private:
   friend class Manager;
   // static Clock instance;
+  int fps_frame;
+  //---------------------fps variable-------
+  std::vector<unsigned int> frameTick;
+  int frameCount;
+  int fps;
+  unsigned int one_frame_tick;
+  unsigned int old_frame_tick;
+  int tick_Diff;
+  unsigned int tick_Sum;
+  //--------------------end fps variable------
 
   bool started;
   bool paused;
