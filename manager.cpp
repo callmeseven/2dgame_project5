@@ -104,6 +104,9 @@ void Manager::play() {
           done = true;
           break;
         }
+        if ( keystate[SDLK_0] ) {
+            sprites[0]->explode();
+        }
         if ( keystate[SDLK_2] ) {
             sprites[2]->explode();
         }

@@ -1,6 +1,7 @@
 #include "multisprite.h"
 #include "gamedata.h"
 #include "frameFactory.h"
+#include "expMultiSprite.h"
 
 void MultiSprite::advanceFrame(Uint32 ticks) {
 	timeSinceLastFrame += ticks;
@@ -17,7 +18,8 @@ MultiSprite::MultiSprite( const std::string& name) :
            Vector2f(Gamedata::getInstance().getXmlInt(name+"/speedX"),
                     Gamedata::getInstance().getXmlInt(name+"/speedY"))
            ),
-  frames( FrameFactory::getInstance().getFrames(name) ),
+  explosion(NULL),
+  m_frames( FrameFactory::getInstance().getFrames(name) ),
   worldWidth(WORLD_WIDTH),
   worldHeight(WORLD_HEIGHT),
 
@@ -25,13 +27,14 @@ MultiSprite::MultiSprite( const std::string& name) :
   numberOfFrames( Gamedata::getInstance().getXmlInt(name+"/frames") ),
   frameInterval( Gamedata::getInstance().getXmlInt(name+"/frameInterval") ),
   timeSinceLastFrame( 0 ),
-  frameWidth(frames[0]->getWidth()),
-  frameHeight(frames[0]->getHeight())
+  frameWidth(m_frames[0]->getWidth()),
+  frameHeight(m_frames[0]->getHeight())
 { }
 
 MultiSprite::MultiSprite(const MultiSprite& s) :
-  Drawable(s), 
-  frames(s.frames),
+  Drawable(s),
+  explosion(NULL),
+  m_frames(s.m_frames),
   worldWidth( s.worldWidth ),
   worldHeight( s.worldHeight ),
   currentFrame(s.currentFrame),
@@ -42,13 +45,42 @@ MultiSprite::MultiSprite(const MultiSprite& s) :
   frameHeight( s.frameHeight )
   { }
 
+MultiSprite& MultiSprite::operator=(const MultiSprite& rhs) {
+    Drawable::operator=(rhs);
+    explosion = rhs.explosion;
+    //m_frames = rhs.m_frames;
+    frameWidth = rhs.frameWidth;
+    frameHeight = rhs.frameHeight;
+    worldWidth = rhs.worldWidth;
+    worldHeight = rhs.worldHeight;
+    return *this;
+}
+void MultiSprite::explode(){
+    if( explosion ) return;
+    explosion = new ExplodingMultiSprite(*this);
+}
+
+
 void MultiSprite::draw() const { 
+  if( explosion ){
+      explosion->draw();
+      return;
+  }
   Uint32 x = static_cast<Uint32>(X());
   Uint32 y = static_cast<Uint32>(Y());
-  frames[currentFrame]->draw(x, y);
+  m_frames[currentFrame]->draw(x, y);
 }
 
 void MultiSprite::update(Uint32 ticks) { 
+
+  if( explosion ) {
+      explosion->update(ticks);
+      if(explosion->chunkCount() == 0) {
+          delete explosion;
+          explosion = NULL;
+      }
+      return;
+  }
   advanceFrame(ticks);
 
   Vector2f incr = getVelocity() * static_cast<float>(ticks) * 0.001;
