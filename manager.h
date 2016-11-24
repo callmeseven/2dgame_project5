@@ -4,6 +4,7 @@
 #include "clock.h"
 #include "world.h"
 #include "viewport.h"
+#include "hud.h"
 
 class Manager {
 public:
@@ -21,6 +22,8 @@ private:
   World world;
   Viewport& viewport;
 
+  Hud& hud;
+
   std::vector<Drawable*> sprites;
   int currentSprite;
 
@@ -30,7 +33,7 @@ private:
   const std::string title;
   const int frameMax;
 
-  void draw() const;
+  void draw(Uint32) const;
   void update();
 
   Manager(const Manager&);

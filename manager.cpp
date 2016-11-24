@@ -21,6 +21,7 @@ Manager::Manager() :
   screen( io.getScreen() ),
   world("back", Gamedata::getInstance().getXmlInt("back/factor") ),
   viewport( Viewport::getInstance() ),
+  hud(Hud::getInstance()),
   sprites(),
   currentSprite(0),
 
@@ -41,17 +42,20 @@ Manager::Manager() :
   viewport.setObjectToTrack(sprites[currentSprite]);
 }
 
-void Manager::draw() const {
+void Manager::draw(Uint32 RED) const {
   world.draw();
   for (unsigned i = 0; i < sprites.size(); ++i) {
     sprites[i]->draw();
   }
 
-  io.printMessageValueAt("Seconds: ", clock.getSeconds(), 10, 20);
-  io.printMessageValueAt("fps: ", clock.getFps(), 40, 100);
-  io.printMessageAt("Press T to switch sprites", 10, 45);
-  io.printMessageAt(title, 10, 450);
+  //io.printMessageValueAt("Seconds: ", clock.getSeconds(), 10, 20);
+  //io.printMessageValueAt("fps: ", clock.getFps(), 40, 100);
+  //io.printMessageAt("Press T to switch sprites", 10, 45);
+  //io.printMessageAt(title, 10, 450);
   viewport.draw();
+  
+  //draw hud;
+  hud.draw_line(screen, RED, clock.getFps(), sprites);
 
   SDL_Flip(screen);
 }
@@ -94,6 +98,7 @@ void Manager::update() {
 void Manager::play() {
   SDL_Event event;
   bool done = false;
+  const Uint32 RED = SDL_MapRGB( screen->format, 0xff, 0,0);
 
   while ( not done ) {
     while ( SDL_PollEvent(&event) ) {
@@ -126,7 +131,7 @@ void Manager::play() {
         }
       }
     }
-    draw();
+    draw(RED);
     update();
   }
 }

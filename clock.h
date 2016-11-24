@@ -1,3 +1,6 @@
+#ifndef CLOCK__H
+#define CLOCK__H
+
 #include <SDL.h>
 #include <string>
 #include <vector>
@@ -9,6 +12,7 @@ public:
   static Clock& getInstance();
   unsigned int getTicks() const;
   unsigned int getTotalTicks() const { return sumOfAllTicks; }
+  unsigned int getSeconds() const { return getTicks()/1000;  }
   int getFps();
 
 private:
@@ -48,7 +52,7 @@ private:
   bool isStarted() const { return started; }
   bool isPaused() const  { return paused;  }
   unsigned int getFrames() const  { return frames;  }
-  unsigned int getSeconds() const { return getTicks()/1000;  }
+  //unsigned int getSeconds() const { return getTicks()/1000;  }
   unsigned int capFrameRate() const;
 
   void start();
@@ -60,3 +64,5 @@ private:
   Clock(const Clock&);
   Clock&operator=(const Clock&);
 };
+
+#endif

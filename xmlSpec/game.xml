@@ -5,6 +5,9 @@
 <screenTitle>Brian Malloy's Star Animation</screenTitle>
 <maxStringSize>50</maxStringSize>
 
+<WORLD_WIDTH>4000</WORLD_WIDTH>
+<WORLD_HEIGHT>960</WORLD_HEIGHT>
+
 <FPS_MAX>200</FPS_MAX>
 
 <frameCap>60</frameCap>

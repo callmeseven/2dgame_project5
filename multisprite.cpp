@@ -20,8 +20,8 @@ MultiSprite::MultiSprite( const std::string& name) :
            ),
   explosion(NULL),
   m_frames( FrameFactory::getInstance().getFrames(name) ),
-  worldWidth(WORLD_WIDTH),
-  worldHeight(WORLD_HEIGHT),
+  worldWidth(Gamedata::getInstance().getXmlInt("WORLD_WIDTH")),
+  worldHeight(Gamedata::getInstance().getXmlInt("WORLD_HEIGHT")),
 
   currentFrame(0),
   numberOfFrames( Gamedata::getInstance().getXmlInt(name+"/frames") ),
