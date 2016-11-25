@@ -2,6 +2,7 @@
 #include <string>
 #include <iomanip>
 #include "multisprite.h"
+#include "player.h"
 #include "sprite.h"
 #include "gamedata.h"
 #include "manager.h"
@@ -18,6 +19,7 @@ Manager::Manager() :
   env( SDL_putenv(const_cast<char*>("SDL_VIDEO_CENTERED=center")) ),
   io( IOManager::getInstance() ),
   clock( Clock::getInstance() ),
+  pool(Pool::getInstance()),
   screen( io.getScreen() ),
   world("back", Gamedata::getInstance().getXmlInt("back/factor") ),
   viewport( Viewport::getInstance() ),
@@ -36,7 +38,7 @@ Manager::Manager() :
   }
   SDL_WM_SetCaption(title.c_str(), NULL);
   atexit(SDL_Quit);
-  sprites.push_back( new MultiSprite("spinstar") );
+  sprites.push_back( new Player("spinstar") );
   sprites.push_back( new Sprite("star") );
   sprites.push_back( new Sprite("greenorb") );
   viewport.setObjectToTrack(sprites[currentSprite]);
@@ -47,15 +49,12 @@ void Manager::draw(Uint32 RED) const {
   for (unsigned i = 0; i < sprites.size(); ++i) {
     sprites[i]->draw();
   }
-
-  //io.printMessageValueAt("Seconds: ", clock.getSeconds(), 10, 20);
-  //io.printMessageValueAt("fps: ", clock.getFps(), 40, 100);
-  //io.printMessageAt("Press T to switch sprites", 10, 45);
-  //io.printMessageAt(title, 10, 450);
+  pool.draw_b();
   viewport.draw();
   
   //draw hud;
   hud.draw_line(screen, RED, clock.getFps(), sprites);
+  hud.draw_pool(screen, RED, pool);
 
   SDL_Flip(screen);
 }
@@ -84,6 +83,7 @@ void Manager::update() {
     lastSeconds = clock.getSeconds();
     //switchSprite();
   }
+  pool.update_b(ticks);
 
   for (unsigned int i = 0; i < sprites.size(); ++i) {
     sprites[i]->update(ticks);
@@ -109,6 +109,11 @@ void Manager::play() {
           done = true;
           break;
         }
+        if ( keystate[SDLK_b] ) {
+            pool.shoot(sprites[0]);
+            pool.printsize();
+            
+        }
         if ( keystate[SDLK_0] ) {
             sprites[0]->explode();
         }
@@ -131,7 +136,8 @@ void Manager::play() {
         }
       }
     }
-    draw(RED);
     update();
+    draw(RED);
+    //update();
   }
 }

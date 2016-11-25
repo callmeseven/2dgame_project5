@@ -5,6 +5,7 @@
 #include "world.h"
 #include "viewport.h"
 #include "hud.h"
+#include "pool.h"
 
 class Manager {
 public:
@@ -17,6 +18,7 @@ private:
   const bool env;
   const IOManager& io;
   Clock& clock;
+  Pool& pool;
 
   SDL_Surface * const screen;
   World world;

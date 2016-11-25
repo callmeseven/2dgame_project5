@@ -5,7 +5,7 @@
 <screenTitle>Brian Malloy's Star Animation</screenTitle>
 <maxStringSize>50</maxStringSize>
 
-<WORLD_WIDTH>4000</WORLD_WIDTH>
+<WORLD_WIDTH>800</WORLD_WIDTH>
 <WORLD_HEIGHT>960</WORLD_HEIGHT>
 
 <FPS_MAX>200</FPS_MAX>
@@ -45,11 +45,11 @@
 </font>
 
 <spinstar>
-  <file>images/star.png</file>
+  <file>images/total.png</file>
   <startLoc x="120" y="140"/>
   <frames>4</frames>
-  <frameInterval>20</frameInterval>
-  <speedX>-200</speedX>
+  <frameInterval>200</frameInterval>
+  <speedX>20</speedX>
   <speedY>200</speedY>
   <transparency>true</transparency>
   <chunk>
