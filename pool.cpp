@@ -2,7 +2,9 @@
 #include <iostream>
 
 Bullet::Bullet(const std::string& s) :
-    Sprite(s)
+    Sprite(s),
+    life(false),
+    life_time(0)
 { }
 
 void Bullet::reset(){
@@ -20,6 +22,7 @@ void Bullet::set_lifetime(){
     life = true;
 }
 
+
 Pool& Pool::getInstance(){
     static Pool instance;
     return instance;
@@ -28,7 +31,7 @@ Pool& Pool::getInstance(){
 Pool::Pool() : bullets(), b_inuse() {
     for (int i=0; i<6; i++)
     {
-      bullets.push_back(new Bullet("greenorb"));
+      bullets.push_back(new Bullet("bullet"));
     }
 }
 
@@ -81,13 +84,10 @@ void Pool::shoot(Drawable* s) {
         if(b_inuse.size()<6){
             b_inuse.push_back((*this).getBullet());
             b_inuse.back()->set_lifetime();
-            if(s->velocityX()>=0)
-            b_inuse.back()->Drawable::velocityX(s->velocityX()+300);
-            else
-            b_inuse.back()->Drawable::velocityX(s->velocityX()-300);
+            b_inuse.back()->Drawable::velocityX(abs(s->velocityX())+300);
             b_inuse.back()->Drawable::velocityY(0);
-            b_inuse.back()->Drawable::X(s->X());
-            b_inuse.back()->Drawable::Y(s->Y());
+            b_inuse.back()->Drawable::X(s->X()+10);
+            b_inuse.back()->Drawable::Y(s->Y()+10);
         }
     }
 }

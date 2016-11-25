@@ -22,6 +22,8 @@ Manager::Manager() :
   pool(Pool::getInstance()),
   screen( io.getScreen() ),
   world("back", Gamedata::getInstance().getXmlInt("back/factor") ),
+  top("top", Gamedata::getInstance().getXmlInt("top/factor") ),
+  bot("bot", Gamedata::getInstance().getXmlInt("bot/factor") ),
   viewport( Viewport::getInstance() ),
   hud(Hud::getInstance()),
   sprites(),
@@ -38,18 +40,18 @@ Manager::Manager() :
   }
   SDL_WM_SetCaption(title.c_str(), NULL);
   atexit(SDL_Quit);
-  sprites.push_back( new Player("spinstar") );
-  sprites.push_back( new Sprite("star") );
-  sprites.push_back( new Sprite("greenorb") );
+  sprites.push_back( new Player("player") );
   viewport.setObjectToTrack(sprites[currentSprite]);
 }
 
 void Manager::draw(Uint32 RED) const {
   world.draw();
+  pool.draw_b();
   for (unsigned i = 0; i < sprites.size(); ++i) {
     sprites[i]->draw();
   }
-  pool.draw_b();
+  top.drawFloat(0, 0);
+  bot.drawFloat(0, 400);
   viewport.draw();
   
   //draw hud;
@@ -92,6 +94,8 @@ void Manager::update() {
     makeFrame();
   }
   world.update();
+  top.update();
+  bot.update();
   viewport.update(); // always update viewport last
 }
 
@@ -103,6 +107,8 @@ void Manager::play() {
   while ( not done ) {
     while ( SDL_PollEvent(&event) ) {
       Uint8 *keystate = SDL_GetKeyState(NULL);
+      sprites[0]->move(keystate);
+
       if (event.type ==  SDL_QUIT) { done = true; break; }
       if(event.type == SDL_KEYDOWN) {
         if (keystate[SDLK_ESCAPE] || keystate[SDLK_q]) {
@@ -111,20 +117,12 @@ void Manager::play() {
         }
         if ( keystate[SDLK_b] ) {
             pool.shoot(sprites[0]);
-            pool.printsize();
-            
         }
         if ( keystate[SDLK_0] ) {
             sprites[0]->explode();
         }
-        if ( keystate[SDLK_2] ) {
-            sprites[2]->explode();
-        }
         if ( keystate[SDLK_t] ) {
           switchSprite();
-        }
-        if ( keystate[SDLK_s] ) {
-          clock.toggleSloMo();
         }
         if ( keystate[SDLK_p] ) {
           if ( clock.isPaused() ) clock.unpause();

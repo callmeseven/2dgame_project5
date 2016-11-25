@@ -63,6 +63,33 @@ void Player::explode(){
     explosion = new ExplodingPlayer(*this);
 }
 
+void Player::move(Uint8* keystate) {
+        if( keystate[SDLK_a] )
+        {
+            this->velocityX(-170);
+        }
+        if( keystate[SDLK_s] )
+        {
+            this->velocityY(100);
+        }
+        if( keystate[SDLK_w] )
+        {
+            this->velocityY(-100);
+        }
+        if( keystate[SDLK_d] )
+        {
+            this->velocityX(170);
+        }
+        if( keystate[SDLK_a] && keystate[SDLK_d] )
+            this->velocityX(0);
+        if( keystate[SDLK_w] && keystate[SDLK_s] )
+            this->velocityY(0);
+
+        if( !keystate[SDLK_a] && !keystate[SDLK_d] )
+            this->velocityX(0);
+        if( !keystate[SDLK_w] && !keystate[SDLK_s] )
+            this->velocityY(0);
+}
 
 void Player::draw() const { 
   if( explosion ){

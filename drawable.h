@@ -48,6 +48,7 @@ public:
   }
   virtual void explode(){
       throw std::string(" i cant explode ");}
+  virtual void move(Uint8*) { };
 
 private:
   std::string name;

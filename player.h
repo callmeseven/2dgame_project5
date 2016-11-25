@@ -19,11 +19,8 @@ public:
     return m_frames[currentFrame]; 
   }
   void explode();
-/*  void up(){
-  void down(){
-  void left(){
-  void right(){
-*/
+  void move(Uint8*);
+
 
 protected:
   ExplodingPlayer* explosion;

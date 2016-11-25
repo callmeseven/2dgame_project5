@@ -14,6 +14,7 @@ class Bullet: public Sprite {
         bool is_alive() {return life;};
         void set_lifetime();
         unsigned int get_lifetime(){ return life_time; }
+
     private:
         bool life;
         unsigned int life_time;
@@ -27,7 +28,18 @@ class Pool {
         Pool(); 
         Bullet* getBullet();
 
-        ~Pool() { }
+        ~Pool() {
+            std::list<Bullet*>::iterator ptr = bullets.begin();
+            while(ptr != bullets.end()){
+                delete *ptr;
+                ptr++;
+            }
+            ptr = b_inuse.begin();
+            while (ptr != b_inuse.end()){
+                delete *ptr;
+                ptr++;
+            }
+        }
         void returnBullet(Bullet* s);
         void draw_b() const;
         void update_b(Uint32 ticks);

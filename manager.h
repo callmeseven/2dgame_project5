@@ -22,6 +22,9 @@ private:
 
   SDL_Surface * const screen;
   World world;
+  World top;
+  World bot;
+
   Viewport& viewport;
 
   Hud& hud;
